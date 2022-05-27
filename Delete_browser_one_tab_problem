@@ -1,0 +1,135 @@
+/*
+You have a browser of one tab where you start on the homepage and you can visit another url,
+on moving on new URL forward Browser history is deleted and new doubly linked list of browser history form with backward browser history.
+
+BrowserHistory(string homepage) Initalizes the object with the homepage of the browser.
+If you visit site from current page. It clears up all the forward history.
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+struct BrowserHistory{
+    char url[20000];
+    struct BrowserHistory* forward;
+    struct BrowserHistory* backward;
+}*home;
+
+// typedef struct BrowserHistory BrowserHistroy;
+
+struct BrowserHistory * Browser_history_homepage(char *homepage)
+{
+  home= (struct BrowserHistory*)malloc(sizeof(struct BrowserHistory));
+  strcpy(home->url,homepage);
+  home->backward=NULL;
+  home->forward=NULL;
+  return home;
+}
+
+struct BrowserHistory * visit_site(struct BrowserHistory* curr , char *url)
+{ if(curr!=NULL)
+{
+    struct BrowserHistory* ptr_delete, *ptr=curr;
+    while(ptr!=NULL)
+    {
+        // ptr=ptr_delete->forward;
+        // free(ptr_delete);
+        // ptr_delete=ptr;
+        if(ptr->forward!=NULL)
+        {ptr_delete=ptr->forward;
+        ptr=ptr_delete;
+        ptr=ptr->forward;
+        free(ptr_delete);}
+        
+        else 
+        ptr=ptr->forward;
+        
+        
+    }
+}
+   struct BrowserHistory*  visit= (struct BrowserHistory*)malloc(sizeof(struct BrowserHistory));
+  strcpy(visit->url,url);
+  visit->forward=NULL;
+  visit->backward=curr;
+  curr->forward=visit;
+  curr=visit;
+  return visit;
+}
+
+struct BrowserHistory * back_site(struct BrowserHistory* curr , int backward_step)
+{  int steps=0,i;
+struct BrowserHistory *ptr=home;
+while(ptr!=NULL)
+{
+    steps++;
+    ptr=ptr->backward;
+    
+}
+    if(backward_step<steps)
+   {  for (i=steps;i>steps-backward_step;i--)
+    {
+        
+        curr=curr->backward;
+    }
+    
+    return curr;}
+    
+    else if( backward_step==steps)
+    {
+        while(curr->backward!=NULL)
+        {
+            curr=curr->backward;
+        }
+        return curr;
+        
+    }
+    
+    
+    
+}
+
+int main()
+{int x=1;
+char url[20000];
+int backward_step;
+struct BrowserHistory* curr;
+// struct BrowserHistory* curr, *ptr=home;
+// printf("%s",ptr->url);
+   curr=Browser_history_homepage("google.com");
+   struct BrowserHistory *ptr=home;
+   
+   while(x)
+   {printf("Enter your choice\n '1' for visit_new site.\n '2' for visiting backward sites.\n '3'  for printing whole current history site \n");
+       scanf("%d%*c",&x);
+   switch (x)
+   {
+   case 1:
+   
+   fflush(stdin);
+   scanf("%[^\n]s",url);
+   curr=visit_site(curr,url);
+   break;
+   
+   case 2:
+   scanf("%d",&backward_step);
+   curr=back_site(curr,backward_step);
+   break;
+   
+   case 3:
+    fflush(stdin);
+    // printf("%u\n",ptr);
+    while(ptr!=NULL)
+    {printf("%s\n",ptr->url);
+    ptr=ptr->forward;
+    }
+    ptr=home;
+   }
+       
+   }
+}
+
+
+
+
+
+
+
